@@ -1,3 +1,22 @@
+/* Archivo: assets/style.css */
+/* Define el estilo general de autenticación, dashboard, formularios y modales. */
+.fab-add-contact {
+    position: fixed;
+    bottom: 32px;
+    right: 32px;
+    z-index: 1200;
+    font-size: 1.1rem;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.18);
+    padding: 1.1rem 2.2rem;
+}
+
+.fab-add-contact.is-hidden {
+    display: none;
+}
+
+.is-hidden {
+    display: none !important;
+}
 :root {
     --body-bg: radial-gradient(circle at top left, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
     --text-main: #ffffff;
@@ -136,8 +155,20 @@ a {
     color: var(--text-muted);
 }
 
+.password-toggle-row {
+    display: flex !important;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: -0.2rem;
+}
+
+.password-toggle-row input[type="checkbox"] {
+    width: auto;
+}
+
 .auth-form input,
 .contact-form input,
+.contact-form select,
 #searchContacts {
     width: 100%;
     padding: 0.95rem 1rem;
@@ -151,9 +182,18 @@ a {
 
 .auth-form input:focus,
 .contact-form input:focus,
+.contact-form select:focus,
 #searchContacts:focus {
     border-color: var(--input-focus);
     transform: translateY(-1px);
+}
+
+.contact-form select option {
+    color: #111111;
+}
+
+body.dark .contact-form select option {
+    color: #111111;
 }
 
 .btn {
@@ -261,6 +301,57 @@ a {
     color: var(--text-muted);
 }
 
+.profile-panel {
+    margin-top: 1.5rem;
+    padding: 1rem;
+    border: 1px solid var(--sidebar-border);
+    border-radius: 20px;
+    background: var(--panel-bg);
+}
+
+.profile-avatar {
+    width: 96px;
+    height: 96px;
+    border-radius: 24px;
+    border: 1px solid var(--input-border);
+    background: var(--input-bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    font-weight: 700;
+    color: #ffffff;
+    cursor: pointer;
+    overflow: hidden;
+    margin-bottom: 0.9rem;
+}
+
+.profile-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.profile-upload-form label {
+    display: block;
+    margin-bottom: 0.75rem;
+    color: var(--text-muted);
+}
+
+.profile-upload-title {
+    display: block;
+    margin-bottom: 0.75rem;
+    color: var(--text-muted);
+}
+
+.hidden-file-input {
+    display: none;
+}
+
+.profile-upload-form .btn {
+    width: 100%;
+}
+
 .dashboard-content {
     padding: 2rem;
     overflow: auto;
@@ -340,6 +431,22 @@ a {
     height: 58px;
     border-radius: 18px;
     background: linear-gradient(135deg, #42e695, #3bb2b8);
+    border: 1px solid var(--input-border);
+    cursor: pointer;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 1.1rem;
+    overflow: hidden;
+    padding: 0;
+}
+
+.contact-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
 .contact-info h4 {
@@ -359,12 +466,159 @@ a {
     margin: 0;
 }
 
+.contact-actions {
+    position: relative;
+}
+
+.btn-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 8px 12px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-menu span {
+    display: block;
+    width: 5px;
+    height: 5px;
+    background: var(--text-main);
+    border-radius: 50%;
+}
+
+
+.dropdown-menu {
+    position: absolute;
+    right: 0;
+    top: 100%;
+    background: #232946;
+    border: 1px solid #232946;
+    border-radius: 12px;
+    padding: 0.5rem;
+    display: none;
+    min-width: 140px;
+    z-index: 100;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+}
+
+.dropdown-menu.show {
+    display: block;
+}
+
+.btn-edit, .btn-delete {
+    display: block;
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: none;
+    border-radius: 8px;
+    background: transparent;
+    color: var(--text-main);
+    cursor: pointer;
+    text-align: left;
+    font-size: 0.9rem;
+}
+
+.btn-edit:hover, .btn-delete:hover {
+    background: rgba(255,255,255,0.12);
+}
+
+.btn-delete {
+    color: #ff6b6b;
+}
+
 .empty-state {
     padding: 2rem;
     border: 1px dashed rgba(255,255,255,0.25);
     border-radius: 24px;
     text-align: center;
     color: var(--empty-text);
+}
+
+/* Modal de edición */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.6);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal.show {
+    display: flex;
+}
+
+.modal-content {
+    background: var(--panel-bg);
+    border: 1px solid var(--panel-border);
+    border-radius: 24px;
+    padding: 2rem;
+    width: min(420px, 90%);
+    position: relative;
+}
+
+.modal-content .close {
+    position: absolute;
+    top: 1rem;
+    right: 1.2rem;
+    font-size: 1.8rem;
+    cursor: pointer;
+    color: var(--text-muted);
+}
+
+.modal-content h3 {
+    margin: 0 0 1.5rem;
+}
+
+.modal-content .contact-form label {
+    margin-bottom: 1rem;
+}
+
+.modal-content .btn-primary {
+    width: 100%;
+    margin-top: 0.5rem;
+}
+
+.image-viewer {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 2000;
+    background: rgba(0, 0, 0, 0.85);
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+}
+
+.image-viewer.show {
+    display: flex;
+}
+
+.image-viewer img {
+    max-width: min(92vw, 820px);
+    max-height: 86vh;
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 12px 50px rgba(0, 0, 0, 0.35);
+    background: #0f1220;
+}
+
+.image-viewer-close {
+    position: absolute;
+    top: 20px;
+    right: 24px;
+    font-size: 2rem;
+    line-height: 1;
+    border: none;
+    background: transparent;
+    color: #ffffff;
+    cursor: pointer;
 }
 
 @media (max-width: 980px) {

@@ -1,9 +1,13 @@
 <?php
+// Archivo: index.php
+// Pantalla principal para iniciar sesiÃ³n.
+
 session_start();
-// Conectar con la base de datos usando el archivo de conexión compartido.
+header('Content-Type: text/html; charset=UTF-8');
+// Conectar con la base de datos usando el archivo de conexiÃƒÂ³n compartido.
 require_once __DIR__ . '/conexion.php';
 
-// Si ya existe sesión, redirigir al panel principal.
+// Si ya existe sesiÃƒÂ³n, redirigir al panel principal.
 if (isset($_SESSION['user_id'])) {
     header('Location: dashboard.php');
     exit;
@@ -12,15 +16,16 @@ if (isset($_SESSION['user_id'])) {
 $message = '';
 $messageType = 'success';
 
-// Leer mensaje flash enviado desde la página de registro.
+// Leer mensaje flash enviado desde la pÃƒÂ¡gina de registro.
 if (!empty($_SESSION['message'])) {
     $message = $_SESSION['message'];
     $messageType = $_SESSION['message_type'] ?? 'success';
     unset($_SESSION['message'], $_SESSION['message_type']);
 }
 
-// Procesar envío del formulario de inicio de sesión.
+// Procesar envÃƒÂ­o del formulario de inicio de sesiÃƒÂ³n.
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Leer credenciales enviadas por el usuario.
     $loginInput = trim($_POST['email'] ?? '');
     $password = $_POST['password'] ?? '';
 
@@ -35,6 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt->close();
 
             if ($user && password_verify($password, $user['password_hash'])) {
+                // Iniciar sesión del usuario autenticado.
                 $_SESSION['user_id'] = $user['id'];
                 $_SESSION['username'] = $user['username'];
                 header('Location: dashboard.php');
@@ -43,7 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-    $message = 'Email o contraseña incorrectos.';
+    $message = 'Email o contraseÃƒÂ±a incorrectos.';
     $messageType = 'error';
 }
 ?>
@@ -78,12 +84,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <input type="text" name="email" required autocomplete="off">
                 </label>
                 <label>
-                    <span>Contraseña</span>
-                    <input type="password" name="password" required autocomplete="new-password">
+                    <span>ContraseÃƒÂ±a</span>
+                    <input type="password" name="password" id="loginPassword" required autocomplete="new-password">
                 </label>
-                <button type="submit" class="btn btn-primary">Iniciar sesión</button>
+                <label class="password-toggle-row">
+                    <input type="checkbox" data-toggle-password="#loginPassword">
+                    <span>Ver contraseÃƒÂ±a</span>
+                </label>
+                <button type="submit" class="btn btn-primary">Iniciar sesiÃƒÂ³n</button>
             </form>
-            <p class="small-text">¿Aún no tienes cuenta? <a href="register.php">Regístrate</a></p>
+            <p class="small-text">Ã‚Â¿AÃƒÂºn no tienes cuenta? <a href="register.php">RegÃƒÂ­strate</a></p>
         </div>
     </div>
     <script src="assets/app.js"></script>

@@ -1,9 +1,13 @@
 <?php
+// Archivo: register.php
+// Pantalla para crear una cuenta nueva.
+
 session_start();
-// Cargar la conexión con la base de datos.
+header('Content-Type: text/html; charset=UTF-8');
+// Cargar la conexiÃ³n con la base de datos.
 require_once __DIR__ . '/conexion.php';
 
-// Si ya hay un usuario con sesión, enviarlo al dashboard.
+// Si ya hay un usuario con sesiÃ³n, enviarlo al dashboard.
 if (isset($_SESSION['user_id'])) {
     header('Location: dashboard.php');
     exit;
@@ -13,6 +17,7 @@ $message = '';
 $messageType = 'error';
 // Validar formulario de registro.
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Leer datos del formulario de registro.
     $username = trim($_POST['username'] ?? '');
     $email = trim($_POST['email'] ?? '');
     $password = $_POST['password'] ?? '';
@@ -21,7 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!$username || !$email || !$password) {
         $message = 'Completa todos los campos para registrarte.';
     } elseif ($password !== $confirm) {
-        $message = 'Las contraseñas no coinciden.';
+        $message = 'Las contraseÃ±as no coinciden.';
     } else {
         // Verificar si ya existe un usuario con el email o nombre elegido.
         $stmt = $conn->prepare('SELECT id FROM usuarios WHERE email = ? OR username = ?');
@@ -31,15 +36,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt->store_result();
 
             if ($stmt->num_rows > 0) {
-                $message = 'El usuario o email ya están en uso.';
+                $message = 'El usuario o email ya estÃ¡n en uso.';
             } else {
                 $stmt->close();
                 $passwordHash = password_hash($password, PASSWORD_DEFAULT);
                 $stmt = $conn->prepare('INSERT INTO usuarios (username, email, password_hash, created_at) VALUES (?, ?, ?, NOW())');
                 if ($stmt) {
+                    // Guardar usuario con contraseña en hash seguro.
                     $stmt->bind_param('sss', $username, $email, $passwordHash);
                     if ($stmt->execute()) {
-                        $_SESSION['message'] = 'Registro correcto, ya puedes iniciar sesión.';
+                        $_SESSION['message'] = 'Registro correcto, ya puedes iniciar sesiÃ³n.';
                         $_SESSION['message_type'] = 'success';
                         header('Location: index.php');
                         exit;
@@ -49,7 +55,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
             $stmt->close();
         } else {
-            $message = 'Error en la conexión con la base de datos.';
+            $message = 'Error en la conexiÃ³n con la base de datos.';
         }
     }
 }
@@ -89,16 +95,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <input type="email" name="email" required autocomplete="off">
                 </label>
                 <label>
-                    <span>Contraseña</span>
-                    <input type="password" name="password" required autocomplete="new-password">
+                    <span>ContraseÃ±a</span>
+                    <input type="password" name="password" id="regPassword" required autocomplete="new-password">
                 </label>
                 <label>
-                    <span>Confirmar contraseña</span>
-                    <input type="password" name="confirm_password" required autocomplete="new-password">
+                    <span>Confirmar contraseÃ±a</span>
+                    <input type="password" name="confirm_password" id="regConfirmPassword" required autocomplete="new-password">
+                </label>
+                <label class="password-toggle-row">
+                    <input type="checkbox" data-toggle-password="#regPassword,#regConfirmPassword">
+                    <span>Ver contraseÃ±as</span>
                 </label>
                 <button type="submit" class="btn btn-primary">Crear cuenta</button>
             </form>
-            <p class="small-text">¿Ya tienes cuenta? <a href="index.php">Iniciar sesión</a></p>
+            <p class="small-text">Â¿Ya tienes cuenta? <a href="index.php">Iniciar sesiÃ³n</a></p>
         </div>
     </div>
     <script src="assets/app.js"></script>

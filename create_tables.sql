@@ -1,7 +1,11 @@
--- Crear la base de datos y las tablas para la agenda telefónica
+﻿-- Archivo: create_tables.sql
+-- Propósito: crear estructuras base de la agenda telefónica.
+
+-- Crear base de datos principal.
 CREATE DATABASE IF NOT EXISTS bd_usuarios CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 USE bd_usuarios;
 
+-- Tabla de usuarios.
 CREATE TABLE IF NOT EXISTS usuarios (
     id INT AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(80) NOT NULL UNIQUE,
@@ -11,6 +15,10 @@ CREATE TABLE IF NOT EXISTS usuarios (
     INDEX (email)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+-- Consulta de apoyo para ver usuarios registrados (opcional).
+SELECT * FROM usuarios;
+
+-- Tabla de contactos por usuario.
 CREATE TABLE IF NOT EXISTS contactos (
     id INT AUTO_INCREMENT PRIMARY KEY,
     usuario_id INT NOT NULL,
@@ -22,3 +30,9 @@ CREATE TABLE IF NOT EXISTS contactos (
     INDEX (usuario_id),
     INDEX (nombre)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Migración histórica: agrega código postal/prefijo si no existía.
+ALTER TABLE contactos ADD COLUMN codigo_postal INT NOT NULL DEFAULT 10 AFTER telefono;
+
+-- Consulta de apoyo para validar contactos (opcional).
+SELECT * FROM contactos;
